@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Flux Stable Diffusion Image Generator API
+  version: 1.0.0
+  description: An API to perform image swapping and streaming using SimSwap
+
+servers:
+  - url: http://localhost:8989
+
+paths:
+  /swap/create:
+    post:
+      summary: Add a new swap task
+      description: Creates a new swap task and starts processing it
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video:
+                  type: string
+                  description: URL of the source video
+                targets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      face:
+                        type: string
+                        description: URL of the target face image
+              required:
+                - video
+                - targets
+      security:
+        - ApiKeyAuth: []
+      responses:
+        200:
+          description: Swap task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  op:
+                    type: string
+                    description: The unique ID of the swap task
+                  status:
+                    type: string
+                  video:
+                    type: string
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        face:
+                          type: string
+                  ts:
+                    type: number
+                  remaining_ts:
+                    type: number
+
+  /swap/{op_id}:
+    get:
+      summary: Retrieve swap task information
+      description: Fetch the information of a specific swap task by its unique ID
+      parameters:
+        - name: op_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Swap task information retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  op:
+                    type: string
+                    description: The unique ID of the swap task
+                  status:
+                    type: string
+                  video:
+                    type: string
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        face:
+                          type: string
+                  ts:
+                    type: number
+                  remaining_ts:
+                    type: number
+
+  /stream/start:
+    post:
+      summary: Start the stream
+      description: Starts the stream with the given source and target
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source:
+                  type: string
+                  description: URL of the source video
+                target:
+                  type: string
+                  description: URL of the target face image
+              required:
+                - source
+                - target
+      security:
+        - ApiKeyAuth: []
+      responses:
+        200:
+          description: Stream started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /stream/stop:
+    get:
+      summary: Stop the stream
+      description: Stops the current stream
+      responses:
+        200:
+          description: Stream stopped successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                   
+

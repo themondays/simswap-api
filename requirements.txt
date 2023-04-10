@@ -1,0 +1,9 @@
+Flask
+Flask-Testing
+flask-cors
+uuid
+wheel
+waitress
+boto3
+shutil
+
